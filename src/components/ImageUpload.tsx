@@ -67,33 +67,39 @@ const ImageUpload = () => {
           className="mt-4 h-auto max-w-full rounded-md"
         />
       )}
-      <button
-        onClick={handleGenerateAlt}
-        disabled={!image || isGenerating}
-        className={`mt-4 w-full rounded-md bg-blue-500 px-4 py-2 text-white ${
-          !image || isGenerating
-            ? "cursor-not-allowed opacity-50"
-            : "hover:bg-blue-600"
-        }`}
-      >
-        {!image
-          ? "画像を選択してください"
-          : isGenerating
-            ? "生成中..."
-            : "altを生成"}
-      </button>
+      {!altText && (
+        <button
+          onClick={handleGenerateAlt}
+          disabled={!image || isGenerating}
+          className={`mt-4 w-full rounded-md bg-blue-500 px-4 py-2 text-white ${
+            !image || isGenerating
+              ? "cursor-not-allowed opacity-50"
+              : "hover:bg-blue-600"
+          }`}
+        >
+          {!image
+            ? "画像を選択してください"
+            : isGenerating
+              ? "生成中..."
+              : "altを生成"}
+        </button>
+      )}
       {altText && (
-        <div className="mt-4 rounded-md bg-gray-100 p-4">
-          <p className="text-gray-700">{altText}</p>
-          <button
-            onClick={handleCopyToClipboard}
-            className="mt-2 w-full rounded-md bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-          >
-            コピー
-          </button>
-          <h3 className="mb-2 mt-4 text-lg font-semibold">Cost:</h3>
-          <p className="text-gray-700">{cost} JPY</p>
-        </div>
+        <>
+          <h2 className="mb-1 mt-4 text-lg font-semibold">Altテキスト</h2>
+          <div className="rounded-md bg-gray-100 p-4">
+            <p className="text-gray-700">{altText}</p>
+            <button
+              onClick={handleCopyToClipboard}
+              className="mt-2 w-full rounded-md bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+            >
+              コピー
+            </button>
+          </div>
+          <p className="mt-2 text-right text-sm text-gray-700">
+            生成コスト：{cost} JPY
+          </p>
+        </>
       )}
       <Toast message={toast.message} visible={toast.visible} />
     </div>

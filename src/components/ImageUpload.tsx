@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import useToast from "@/components/useToast.tsx";
 import Toast from "@/components/Toast.tsx";
 
@@ -9,6 +9,7 @@ const ImageUpload = () => {
   const [cost, setCost] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast, showToast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -53,19 +54,51 @@ const ImageUpload = () => {
     showToast("Altテキストがクリップボードにコピーされました！");
   };
 
+  const handleRemoveImage = () => {
+    setImage(null);
+    setPreview("");
+    setAltText("");
+    setCost("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   return (
     <div className="mx-auto mt-8 max-w-md rounded-lg bg-white p-4 shadow-md">
       <input
         type="file"
+        ref={fileInputRef}
         onChange={handleImageUpload}
         className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100"
       />
       {preview && (
-        <img
-          src={preview}
-          alt="プレビュー"
-          className="mt-4 h-auto max-w-full rounded-md"
-        />
+        <div className="relative mt-4">
+          <img
+            src={preview}
+            alt="プレビュー"
+            className="h-auto max-w-full rounded-md"
+          />
+          <button
+            onClick={handleRemoveImage}
+            className="absolute -right-4 -top-4 m-2 flex size-6 items-center justify-center rounded-full border bg-white/[50] leading-none text-black hover:ring-2 hover:ring-black"
+            aria-label="画像を削除"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
       )}
       {!altText && (
         <button

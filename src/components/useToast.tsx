@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const useToast = () => {
   const [toast, setToast] = useState({ message: "", visible: false });
 
-  const showToast = (message) => {
+  const showToast = (message: string) => {
     setToast({ message, visible: true });
     setTimeout(() => {
       setToast({ message: "", visible: false });

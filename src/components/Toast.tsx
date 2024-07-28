@@ -1,9 +1,7 @@
-import React from "react";
-
-const Toast = ({ message, visible }) => {
+const Toast = ({ message, visible }: { message: string; visible: boolean }) => {
   return (
     <div
-      className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black text-white rounded-md transition-opacity duration-300 ${
+      className={`fixed bottom-4 left-1/2 -translate-x-1/2 transform rounded-md bg-black px-4 py-2 text-white transition-opacity duration-300 ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >

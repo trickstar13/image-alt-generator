@@ -1,7 +1,7 @@
 import { Buffer } from "buffer";
 import sharp from "sharp";
 
-export const POST = async ({ request }) => {
+export const POST = async ({ request }: { request: Request }) => {
   try {
     const formData = await request.formData();
     const imageFile = formData.get("image");
@@ -12,11 +12,11 @@ export const POST = async ({ request }) => {
       });
     }
 
-    const fileArrayBuffer = await imageFile.arrayBuffer();
+    const fileArrayBuffer = await (imageFile as Blob).arrayBuffer();
     const buffer = Buffer.from(fileArrayBuffer);
 
     // MIMEタイプを判定
-    const mimeType = imageFile.type;
+    const mimeType = (imageFile as Blob).type;
     const supportedTypes = [
       "image/jpeg",
       "image/png",
@@ -82,7 +82,7 @@ export const POST = async ({ request }) => {
         JSON.stringify({
           error: `API request failed: ${errorData.error.message}`,
         }),
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -92,7 +92,7 @@ export const POST = async ({ request }) => {
     if (!altText) {
       return new Response(
         JSON.stringify({ error: "Failed to generate alt text" }),
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -110,7 +110,7 @@ export const POST = async ({ request }) => {
 
     return new Response(
       JSON.stringify({ alt: altText, cost: totalCostJPY.toFixed(2) }),
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error processing request:", error);

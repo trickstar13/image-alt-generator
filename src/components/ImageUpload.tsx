@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import useToast from "./useToast";
-import Toast from "./Toast";
+import { useState } from "react";
+import useToast from "@/components/useToast.tsx";
+import Toast from "@/components/Toast.tsx";
 
 const ImageUpload = () => {
   const [image, setImage] = useState(null);

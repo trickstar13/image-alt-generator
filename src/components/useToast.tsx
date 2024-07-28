@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const useToast = () => {
   const [toast, setToast] = useState({ message: "", visible: false });

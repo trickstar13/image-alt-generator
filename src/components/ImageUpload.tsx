@@ -2,13 +2,17 @@ import { useState, useRef } from "react";
 import useToast from "@/components/useToast.tsx";
 import Toast from "@/components/Toast.tsx";
 
+function isErrorWithMessage(error: unknown): error is Error {
+  return typeof error === "object" && error !== null && "message" in error;
+}
+
 const ImageUpload = () => {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
   const [altText, setAltText] = useState("");
   const [cost, setCost] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const { toast, showToast } = useToast();
+  const { toast, showToast, hideToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,15 +39,21 @@ const ImageUpload = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to generate alt text");
+        const errorData = await response.json();
+        throw new Error(`Error ${response.status}: ${errorData.error}`);
       }
 
       const data = await response.json();
       setAltText(data.alt);
       setCost(data.cost); // コストを設定
     } catch (error) {
-      console.error("Error generating alt text:", error);
-      showToast("Altテキストの生成に失敗しました。");
+      if (isErrorWithMessage(error)) {
+        showToast(`Altテキストの生成に失敗しました。${error.message}`);
+      } else {
+        showToast(
+          "Altテキストの生成に失敗しました。未知のエラーが発生しました。",
+        );
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -59,6 +69,7 @@ const ImageUpload = () => {
     setPreview("");
     setAltText("");
     setCost("");
+    hideToast();
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
